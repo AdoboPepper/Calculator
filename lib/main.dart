@@ -29,6 +29,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var userQuestion = '';
   var userAnswer = '';
+  bool isFull = false;
   final List<String> buttons = [
     'C',
     'DEL',
@@ -92,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         buttonTapped: (){
                           setState(() {
                             userQuestion = '';
+                            userAnswer = '';
                           });
                         },
                         buttonText: buttons[index],
@@ -114,9 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     } else if (index == buttons.length-1) {
                       return MyButton(
                         buttonTapped: (){
-                          setState(() {
-                            equalPressed();
-                          });
+                            setState(() {
+                              equalPressed();
+                            });
                         },
                         buttonText: buttons[index],
                         color: Colors.green[900],
@@ -128,8 +130,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     else {
                       return MyButton(
                         buttonTapped: () {
+
                           setState(() {
-                            userQuestion += buttons[index];
+                            if (userAnswer == ''){
+                            setState(() {
+                              userQuestion += buttons[index];
+                            });
+                            }
+                            else if (userAnswer != ''){
+                              userQuestion = userAnswer;
+                              userAnswer = '';
+                              setState(() {
+                                userQuestion += buttons[index];
+                              });
+                            }
+
                           });
                         },
                         buttonText: buttons[index],
@@ -155,8 +170,10 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return false;
   }
+  
   void equalPressed(){
     String finalQuestion = userQuestion;
+    finalQuestion = finalQuestion.replaceAll('x', '*');
 
     Parser p = Parser();
     Expression exp = p.parse(finalQuestion);
@@ -165,5 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     userAnswer = eval.toString();
   }
+
+
 }
 
